@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>DriveMacha</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#070a10;--surface:#0f1520;--card:#151e30;--card2:#1a2540;
+  --accent:#f4a21e;--accent2:#e05c2a;--blue:#3a8ef6;--purple:#8b5cf6;
+  --text:#e8eaf2;--muted:#6b7491;--border:#1e2d45;
+  --success:#22c55e;--danger:#ef4444;--warn:#f59e0b;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:15px 34px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;gap:12px}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;cursor:pointer}
+.nav-btns{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+
+/* BUTTONS */
+.btn{padding:8px 18px;border-radius:8px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;font-size:13px;transition:all .2s;display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--text)}
+.btn-outline:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#000;font-weight:700}
+.btn-primary:hover:not(:disabled){opacity:.88;transform:translateY(-1px);box-shadow:0 4px 18px rgba(244,162,30,.25)}
+.btn-purple{background:var(--purple);color:#fff}
+.btn-purple:hover:not(:disabled){opacity:.85}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-danger:hover:not(:disabled){opacity:.85}
+.btn-sm{padding:5px 12px;font-size:12px}
+.btn-xs{padding:4px 9px;font-size:11px}
+
+/* PAGES */
+.page{display:none;padding:32px;max-width:1280px;margin:0 auto;animation:fadeUp .3s ease}
+.page.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* LANDING */
+#page-landing{display:none;padding:0}
+#page-landing.active{display:block}
+.landing-hero{display:grid;grid-template-columns:1fr 1fr;min-height:100vh;gap:0}
+.landing-left{background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:60px 70px}
+.landing-right{background:var(--card);display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:60px 70px;border-left:1px solid var(--border)}
+.hero-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.hero-label::before{content:'';width:28px;height:2px;background:var(--accent);display:inline-block}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:72px;letter-spacing:2px;line-height:1;margin-bottom:18px}
+.hero-title .highlight{background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{color:var(--muted);font-size:16px;line-height:1.7;margin-bottom:36px;max-width:380px}
+.hero-cta-group{display:flex;flex-direction:column;gap:12px;width:100%;max-width:340px}
+.hero-cta-group .divider{text-align:center;color:var(--muted);font-size:12px;position:relative}
+.hero-cta-group .divider::before,.hero-cta-group .divider::after{content:'';position:absolute;top:50%;width:40%;height:1px;background:var(--border)}
+.hero-cta-group .divider::before{left:0}
+.hero-cta-group .divider::after{right:0}
+.portal-card{background:var(--card2);border:1px solid var(--border);border-radius:var(--radius);padding:28px;width:100%;max-width:340px}
+.portal-card-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.portal-card-sub{color:var(--muted);font-size:13px;margin-bottom:18px}
+.portal-card-btns{display:flex;gap:8px}
+.right-info{margin-top:40px}
+.stat-pill{display:inline-flex;align-items:center;gap:8px;background:var(--card2);border:1px solid var(--border);border-radius:20px;padding:8px 16px;font-size:13px;color:var(--muted);margin:4px}
+.stat-pill strong{color:var(--text)}
+
+/* FORM */
+.auth-wrap{display:flex;min-height:calc(100vh - 62px);align-items:center;justify-content:center;padding:30px}
+.form-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:36px;width:100%;max-width:460px;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.form-card.admin-theme{border-color:rgba(139,92,246,.3);box-shadow:0 20px 60px rgba(139,92,246,.1)}
+.form-header{margin-bottom:26px}
+.form-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;margin-bottom:12px;letter-spacing:.5px}
+.form-badge.user{background:rgba(244,162,30,.12);border:1px solid rgba(244,162,30,.25);color:var(--accent)}
+.form-badge.admin{background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.25);color:var(--purple)}
+.form-title{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:1px;margin-bottom:4px}
+.form-sub{color:var(--muted);font-size:13px}
+.field{margin-bottom:14px}
+.lbl{display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.6px}
+input[type=text],input[type=email],input[type=password],input[type=date],input[type=number],input[type=url],select,textarea{
+  width:100%;padding:10px 13px;background:var(--card);border:1.5px solid var(--border);border-radius:8px;
+  color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border .2s
+}
+.admin-theme input:focus,.admin-theme select:focus{border-color:var(--purple)}
+input:focus,select:focus{border-color:var(--accent)}
+textarea{resize:vertical;min-height:66px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.form-link{font-size:13px;color:var(--muted);margin-top:14px;text-align:center}
+.form-link a{color:var(--accent);cursor:pointer;text-decoration:underline}
+.form-link a.purple{color:var(--purple)}
+.err{color:var(--danger);font-size:12px;margin-top:6px;padding:7px 11px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:6px;display:none}
+
+/* SECTION TITLE */
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px;margin-bottom:16px}
+
+/* SEARCH */
+.search-bar{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px 26px;margin-bottom:22px}
+.search-bar h2{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;margin-bottom:14px}
+.search-grid{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px;align-items:end}
+
+/* FILTER CHIPS */
+.chips{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}
+.chip{padding:5px 14px;border-radius:20px;border:1.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:12px;font-weight:600;transition:all .2s;font-family:'DM Sans',sans-serif}
+.chip:hover,.chip.active{border-color:var(--accent);color:var(--accent);background:rgba(244,162,30,.08)}
+
+/* CAR CARD */
+.cars-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(285px,1fr));gap:18px}
+.car-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:transform .25s,border-color .25s,box-shadow .25s}
+.car-card:hover{transform:translateY(-4px);border-color:var(--accent);box-shadow:0 14px 40px rgba(244,162,30,.12)}
+.car-img-wrap{position:relative;height:175px;overflow:hidden;background:var(--card)}
+.car-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.car-card:hover .car-img-wrap img{transform:scale(1.06)}
+.car-img-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 50%,rgba(7,10,16,.85))}
+.badge-type{position:absolute;top:10px;left:10px;background:rgba(7,10,16,.7);backdrop-filter:blur(6px);border:1px solid var(--border);border-radius:20px;padding:3px 10px;font-size:10px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.5px}
+.badge-avail{position:absolute;top:10px;right:10px;border-radius:20px;padding:3px 9px;font-size:10px;font-weight:700}
+.badge-ok{background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3);color:var(--success)}
+.badge-no{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:var(--danger)}
+.car-body{padding:16px}
+.car-name{font-weight:700;font-size:16px;margin-bottom:2px}
+.car-tagline{font-size:12px;color:var(--muted);margin-bottom:10px}
+.specs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px}
+.spec{background:var(--card);border-radius:6px;padding:3px 8px;font-size:11px;color:var(--muted)}
+.car-footer{display:flex;justify-content:space-between;align-items:center}
+.car-price{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--accent);line-height:1}
+.car-price-sub{font-size:11px;color:var(--muted)}
+
+/* CALENDAR */
+.cal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:300;align-items:center;justify-content:center;padding:16px}
+.cal-overlay.active{display:flex}
+.cal-modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:26px;max-width:680px;width:100%;max-height:94vh;overflow-y:auto;position:relative;animation:fadeUp .25s}
+.cal-car-banner{display:flex;gap:13px;align-items:center;margin-bottom:20px;background:var(--card);border-radius:10px;padding:13px;border:1px solid var(--border)}
+.cal-car-banner img{width:86px;height:57px;object-fit:cover;border-radius:7px;border:1px solid var(--border)}
+.cal-car-name{font-weight:700;font-size:15px;margin-bottom:3px}
+.cal-car-meta{font-size:12px;color:var(--muted)}
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px}
+.cal-month-label{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px}
+.cal-nav{display:flex;gap:5px}
+.cal-nav-btn{background:var(--card);border:1px solid var(--border);color:var(--text);border-radius:7px;padding:4px 11px;cursor:pointer;font-size:16px;transition:all .2s}
+.cal-nav-btn:hover{border-color:var(--accent);color:var(--accent)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal-day-hdr{text-align:center;font-size:10px;font-weight:700;color:var(--muted);padding:5px 0;text-transform:uppercase}
+.cal-day{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:7px;cursor:pointer;transition:all .17s;font-size:13px;font-weight:500;position:relative;border:1.5px solid transparent}
+.cal-day.empty{cursor:default}
+.cal-day.past{color:var(--muted);cursor:not-allowed;opacity:.4}
+.cal-day.avail{background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.25);color:var(--success)}
+.cal-day.avail:hover{background:rgba(34,197,94,.25);border-color:var(--success)}
+.cal-day.booked{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.2);color:var(--danger);cursor:not-allowed}
+.cal-day.today{border-color:var(--accent)!important;font-weight:700}
+.cal-day.sel-from,.cal-day.sel-to{background:rgba(244,162,30,.3);border-color:var(--accent);color:var(--accent)}
+.cal-day.in-range{background:rgba(244,162,30,.1);border-color:rgba(244,162,30,.2)}
+.cal-day .dot{width:4px;height:4px;border-radius:50%;position:absolute;bottom:3px}
+.dot-booked{background:var(--danger)}
+.dot-avail{background:var(--success)}
+.cal-legend{display:flex;gap:14px;margin-top:12px;flex-wrap:wrap}
+.cal-legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
+.cal-legend-dot{width:9px;height:9px;border-radius:3px}
+.cal-sel-info{background:var(--card);border-radius:7px;padding:11px 14px;margin-top:12px;font-size:13px;border:1px solid var(--border)}
+
+/* BOOKING MODAL */
+.bk-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:200;align-items:center;justify-content:center;padding:16px}
+.bk-overlay.active{display:flex}
+.bk-modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:30px;max-width:560px;width:100%;max-height:93vh;overflow-y:auto;position:relative;animation:fadeUp .25s}
+.bk-modal-title{font-family:'Bebas Neue',sans-serif;font-size:28px;margin-bottom:16px}
+.modal-close{position:absolute;top:14px;right:16px;background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;line-height:1}
+.modal-close:hover{color:var(--text)}
+.bk-car-img{width:100%;height:160px;object-fit:cover;border-radius:9px;margin-bottom:16px;border:1px solid var(--border)}
+.cost-box{background:var(--card);border-radius:9px;padding:15px;margin:13px 0;border:1px solid var(--border)}
+.cost-box-lbl{font-weight:700;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:9px}
+.cost-row{display:flex;justify-content:space-between;padding:6px 0;font-size:13px;border-bottom:1px solid var(--border)}
+.cost-row:last-child{border-bottom:none;font-weight:700;font-size:15px;color:var(--accent);padding-top:9px}
+
+/* LICENSE */
+.lic-section{margin:16px 0;border:1px solid var(--border);border-radius:9px;overflow:hidden}
+.lic-header-bar{background:var(--card);padding:11px 15px;font-weight:700;font-size:13px;display:flex;align-items:center;gap:6px}
+.lic-body{padding:15px}
+.toggle-row{display:flex;gap:8px;margin-bottom:13px}
+.toggle-btn{flex:1;padding:9px;border-radius:7px;border:1.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;font-size:13px;transition:all .2s;text-align:center}
+.toggle-btn.yes.active{border-color:var(--success);background:rgba(34,197,94,.08);color:var(--success)}
+.toggle-btn.no.active{border-color:var(--danger);background:rgba(239,68,68,.08);color:var(--danger)}
+.lic-fields{display:none}
+.lic-fields.show{display:block}
+.lic-field-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.upload-box{border:2px dashed var(--border);border-radius:9px;padding:18px;text-align:center;cursor:pointer;transition:all .2s}
+.upload-box:hover{border-color:var(--accent);background:rgba(244,162,30,.03)}
+.upload-box input{display:none}
+.lic-img-preview{width:100%;max-height:150px;object-fit:cover;border-radius:7px;margin-top:10px;display:none;border:1px solid var(--border)}
+.no-lic-warn{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);border-radius:7px;padding:12px;color:#fca5a5;font-size:13px;display:none}
+.no-lic-warn.show{display:block}
+.vpill{display:inline-flex;align-items:center;font-size:11px;padding:2px 9px;border-radius:18px;font-weight:700;margin-top:4px}
+.vpill.ok{background:rgba(34,197,94,.15);color:var(--success)}
+.vpill.fail{background:rgba(239,68,68,.15);color:var(--danger)}
+
+/* ADMIN */
+.admin-layout{display:grid;grid-template-columns:220px 1fr;gap:20px;min-height:calc(100vh - 90px)}
+.admin-sidebar{background:var(--surface);border:1px solid rgba(139,92,246,.2);border-radius:var(--radius);padding:18px;height:fit-content;position:sticky;top:80px}
+.admin-sidebar-title{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;color:var(--purple);margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.admin-nav{display:flex;flex-direction:column;gap:3px}
+.admin-nav-item{display:flex;align-items:center;gap:8px;padding:9px 11px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:500;transition:all .2s;color:var(--muted);border:1px solid transparent}
+.admin-nav-item:hover{background:var(--card);color:var(--text)}
+.admin-nav-item.active{background:rgba(139,92,246,.1);border-color:rgba(139,92,246,.2);color:var(--purple);font-weight:600}
+.admin-content{min-width:0}
+.admin-sec{display:none}
+.admin-sec.active{display:block;animation:fadeUp .25s}
+.admin-stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.admin-stat{background:var(--surface);border:1px solid rgba(139,92,246,.15);border-radius:var(--radius);padding:17px}
+.admin-stat-val{font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--purple)}
+.admin-stat-label{color:var(--muted);font-size:12px;margin-top:1px}
+
+/* TABLE */
+.table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;padding:10px 13px;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);border-bottom:1px solid var(--border);background:var(--card)}
+td{padding:11px 13px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,.012)}
+
+/* ADD CAR FORM */
+.add-car-box{background:var(--surface);border:1px solid rgba(139,92,246,.2);border-radius:var(--radius);padding:24px}
+.add-car-box h3{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;margin-bottom:16px;color:var(--purple)}
+
+/* USER STATS */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-bottom:22px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:17px}
+.stat-val{font-family:'Bebas Neue',sans-serif;font-size:38px;color:var(--accent)}
+.stat-label{color:var(--muted);font-size:12px;margin-top:2px}
+.user-welcome{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+.avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:19px;color:#000;flex-shrink:0}
+
+/* STATUS BADGES */
+.sbadge{font-size:11px;padding:2px 8px;border-radius:9px;font-weight:700;display:inline-block}
+.sbadge-ok{background:rgba(34,197,94,.15);color:var(--success)}
+.sbadge-fail{background:rgba(239,68,68,.15);color:var(--danger)}
+.sbadge-blue{background:rgba(58,142,246,.15);color:var(--blue)}
+.sbadge-purple{background:rgba(139,92,246,.15);color:var(--purple)}
+.sbadge-warn{background:rgba(245,158,11,.15);color:var(--warn)}
+
+/* TOAST */
+.toast{position:fixed;bottom:22px;right:22px;padding:12px 16px;border-radius:9px;font-weight:600;font-size:13px;z-index:9999;display:none;animation:fadeUp .3s;max-width:300px}
+.toast.success{background:var(--success);color:#000}
+.toast.error{background:var(--danger);color:#fff}
+.toast.info{background:var(--blue);color:#fff}
+
+@media(max-width:900px){
+  .landing-hero{grid-template-columns:1fr}
+  .landing-right{display:none}
+  .admin-layout{grid-template-columns:1fr}
+  .admin-sidebar{position:static;display:flex;gap:6px;flex-wrap:wrap;padding:12px}
+  .admin-sidebar-title{display:none}
+  .admin-nav{flex-direction:row;flex-wrap:wrap}
+  .admin-stats-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:640px){
+  nav{padding:12px 14px}
+  .page{padding:16px 12px}
+  .landing-left{padding:40px 24px}
+  .hero-title{font-size:52px}
+  .search-grid{grid-template-columns:1fr 1fr}
+  .stats-row,.admin-stats-grid{grid-template-columns:1fr 1fr}
+  .lic-field-grid,.field-row,.field-row3{grid-template-columns:1fr}
+  .cars-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo" onclick="showLanding()">DriveEasy</div>
+  <div class="nav-btns" id="nav-btns">
+    <button class="btn btn-outline btn-sm" onclick="showPage('user-login')">User Login</button>
+    <button class="btn btn-primary btn-sm" onclick="showPage('user-register')">User Register</button>
+    <button class="btn btn-purple btn-sm" onclick="showPage('admin-login')">Admin</button>
+  </div>
+</nav>
+<div class="toast" id="toast"></div>
+
+<!-- =========== LANDING =========== -->
+<div class="page active" id="page-landing">
+  <div class="landing-hero">
+    <div class="landing-left">
+      <div class="hero-label">Premium Car Rental</div>
+      <div class="hero-title">Drive Your<br/><span class="highlight">Dream Car</span><br/>Today</div>
+      <p class="hero-sub">India's most trusted car rental platform. Choose from 15+ premium vehicles with instant booking and verified drivers.</p>
+      <div class="hero-cta-group">
+        <button class="btn btn-primary" style="padding:13px 28px;font-size:15px;justify-content:center" onclick="showPage('user-register')">🚗 Rent a Car</button>
+        <div class="divider">or</div>
+        <button class="btn btn-outline" style="padding:12px 28px;font-size:14px;justify-content:center" onclick="showPage('user-login')">Login to Your Account</button>
+      </div>
+      <div style="margin-top:34px">
+        <div style="font-size:12px;color:var(--muted);margin-bottom:10px">ADMIN ACCESS</div>
+        <button class="btn btn-purple btn-sm" onclick="showPage('admin-login')">🛡️ Admin Portal</button>
+        <span style="font-size:12px;color:var(--muted);margin-left:10px">· Register or Login</span>
+      </div>
+    </div>
+    <div class="landing-right">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;color:var(--muted);margin-bottom:20px">FLEET PREVIEW</div>
+      <div class="cars-grid" style="grid-template-columns:1fr 1fr" id="featured-cars"></div>
+      <div style="margin-top:20px">
+        <div class="stat-pill">🚗 <strong>15+</strong> Cars Available</div>
+        <div class="stat-pill">✓ <strong>AI</strong> License Verification</div>
+        <div class="stat-pill">📅 <strong>Live</strong> Booking Calendar</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =========== USER REGISTER =========== -->
+<div class="page" id="page-user-register">
+  <div class="auth-wrap">
+    <div class="form-card">
+      <div class="form-header">
+        <div class="form-badge user">🚗 User Account</div>
+        <div class="form-title">Create Account</div>
+        <div class="form-sub">Join DriveEasy and start renting today</div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label class="lbl">First Name</label><input type="text" id="ur-fname" placeholder="John"/></div>
+        <div class="field"><label class="lbl">Last Name</label><input type="text" id="ur-lname" placeholder="Doe"/></div>
+      </div>
+      <div class="field"><label class="lbl">Email Address</label><input type="email" id="ur-email" placeholder="john@email.com"/></div>
+      <div class="field"><label class="lbl">Phone Number</label><input type="text" id="ur-phone" placeholder="+91 98765 43210"/></div>
+      <div class="field"><label class="lbl">Password</label><input type="password" id="ur-pass" placeholder="Min 6 characters"/></div>
+      <div class="field"><label class="lbl">Confirm Password</label><input type="password" id="ur-pass2" placeholder="Repeat password"/></div>
+      <div class="err" id="ur-err"></div>
+      <button class="btn btn-primary" style="width:100%;padding:12px;font-size:14px;margin-top:8px;justify-content:center" onclick="userRegister()">Create My Account</button>
+      <div class="form-link">Already have an account? <a onclick="showPage('user-login')">Login here</a></div>
+      <div class="form-link" style="margin-top:6px"><a onclick="showLanding()" style="color:var(--muted)">← Back to Home</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- =========== USER LOGIN =========== -->
+<div class="page" id="page-user-login">
+  <div class="auth-wrap">
+    <div class="form-card">
+      <div class="form-header">
+        <div class="form-badge user">🚗 User Account</div>
+        <div class="form-title">Welcome Back</div>
+        <div class="form-sub">Login to your DriveEasy account</div>
+      </div>
+      <div class="field"><label class="lbl">Email Address</label><input type="email" id="ul-email" placeholder="john@email.com"/></div>
+      <div class="field"><label class="lbl">Password</label><input type="password" id="ul-pass" placeholder="Your password"/></div>
+      <div class="err" id="ul-err"></div>
+      <button class="btn btn-primary" style="width:100%;padding:12px;font-size:14px;margin-top:8px;justify-content:center" onclick="userLogin()">Login</button>
+      <div class="form-link">No account? <a onclick="showPage('user-register')">Register here</a></div>
+      <div class="form-link" style="margin-top:6px"><a onclick="showLanding()" style="color:var(--muted)">← Back to Home</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- =========== ADMIN REGISTER =========== -->
+<div class="page" id="page-admin-register">
+  <div class="auth-wrap">
+    <div class="form-card admin-theme">
+      <div class="form-header">
+        <div class="form-badge admin">🛡️ Admin Account</div>
+        <div class="form-title">Create Admin</div>
+        <div class="form-sub">Register a new administrator account</div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label class="lbl">First Name</label><input type="text" id="ar-fname" placeholder="Admin"/></div>
+        <div class="field"><label class="lbl">Last Name</label><input type="text" id="ar-lname" placeholder="Manager"/></div>
+      </div>
+      <div class="field"><label class="lbl">Admin Email</label><input type="email" id="ar-email" placeholder="admin@company.com"/></div>
+      <div class="field"><label class="lbl">Phone Number</label><input type="text" id="ar-phone" placeholder="+91 98765 43210"/></div>
+      <div class="field"><label class="lbl">Password</label><input type="password" id="ar-pass" placeholder="Strong password"/></div>
+      <div class="field"><label class="lbl">Confirm Password</label><input type="password" id="ar-pass2" placeholder="Repeat password"/></div>
+      <div class="field"><label class="lbl">Admin Secret Key</label><input type="password" id="ar-secret" placeholder="Enter admin secret key"/></div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:12px;padding:8px 10px;background:rgba(139,92,246,.06);border-radius:6px;border:1px solid rgba(139,92,246,.15)">
+        🔑 Secret key: <strong style="color:var(--purple)">DRIVEEASY2025</strong>
+      </div>
+      <div class="err" id="ar-err"></div>
+      <button class="btn btn-purple" style="width:100%;padding:12px;font-size:14px;margin-top:6px;justify-content:center" onclick="adminRegister()">Create Admin Account</button>
+      <div class="form-link">Already an admin? <a class="purple" onclick="showPage('admin-login')">Admin Login</a></div>
+      <div class="form-link" style="margin-top:6px"><a onclick="showLanding()" style="color:var(--muted)">← Back to Home</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- =========== ADMIN LOGIN =========== -->
+<div class="page" id="page-admin-login">
+  <div class="auth-wrap">
+    <div class="form-card admin-theme">
+      <div class="form-header">
+        <div class="form-badge admin">🛡️ Admin Portal</div>
+        <div class="form-title">Admin Login</div>
+        <div class="form-sub">Access the DriveEasy admin dashboard</div>
+      </div>
+      <div class="field"><label class="lbl">Admin Email</label><input type="email" id="al-email" placeholder="admin@company.com"/></div>
+      <div class="field"><label class="lbl">Password</label><input type="password" id="al-pass" placeholder="Admin password"/></div>
+      <div class="err" id="al-err"></div>
+      <button class="btn btn-purple" style="width:100%;padding:12px;font-size:14px;margin-top:8px;justify-content:center" onclick="adminLogin()">Login as Admin</button>
+      <div class="form-link">New admin? <a class="purple" onclick="showPage('admin-register')">Register here</a></div>
+      <div class="form-link" style="margin-top:6px"><a onclick="showLanding()" style="color:var(--muted)">← Back to Home</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- =========== USER DASHBOARD =========== -->
+<div class="page" id="page-dashboard">
+  <div class="user-welcome">
+    <div class="avatar" id="u-avatar">J</div>
+    <div>
+      <div style="font-size:11px;color:var(--muted)">Welcome back,</div>
+      <div style="font-size:17px;font-weight:700" id="u-name">User</div>
+    </div>
+    <div style="margin-left:auto;display:flex;gap:7px;flex-wrap:wrap">
+      <button class="btn btn-outline btn-sm" onclick="showPage('my-bookings');renderMyBookings()">My Bookings</button>
+      <button class="btn btn-outline btn-sm" onclick="userLogout()">Logout</button>
+    </div>
+  </div>
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-val" id="u-s-total">0</div><div class="stat-label">My Bookings</div></div>
+    <div class="stat-card"><div class="stat-val" id="u-s-spent">₹0</div><div class="stat-label">Total Spent</div></div>
+    <div class="stat-card"><div class="stat-val" id="u-s-cars">0</div><div class="stat-label">Cars Available</div></div>
+  </div>
+  <div class="search-bar">
+    <h2>🔍 Find Your Car</h2>
+    <div class="search-grid">
+      <div class="field"><label class="lbl">From Date</label><input type="date" id="s-from"/></div>
+      <div class="field"><label class="lbl">To Date</label><input type="date" id="s-to"/></div>
+      <div class="field"><label class="lbl">Seats</label>
+        <select id="s-seats">
+          <option value="">Any</option>
+          <option value="2">2 Seater</option>
+          <option value="4">4 Seater</option>
+          <option value="5">5 Seater</option>
+          <option value="7">7 Seater</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" onclick="searchCars()">Search</button>
+    </div>
+  </div>
+  <div class="chips" id="filter-chips"></div>
+  <div class="sec-title">Available Cars</div>
+  <div class="cars-grid" id="cars-list"></div>
+</div>
+
+<!-- =========== MY BOOKINGS =========== -->
+<div class="page" id="page-my-bookings">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+    <div class="sec-title" style="margin:0">My Bookings</div>
+    <button class="btn btn-outline btn-sm" onclick="showPage('dashboard')">← Back</button>
+  </div>
+  <div class="table-wrap">
+    <table><thead><tr><th>Car</th><th>From</th><th>To</th><th>Days</th><th>Fuel</th><th>Total</th><th>License</th></tr></thead>
+    <tbody id="my-bookings-body"></tbody></table>
+  </div>
+</div>
+
+<!-- =========== ADMIN DASHBOARD =========== -->
+<div class="page" id="page-admin">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px">
+    <div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:1px">Admin Dashboard</div>
+      <div style="color:var(--muted);font-size:12px" id="admin-name-display">Welcome, Admin</div>
+    </div>
+    <button class="btn btn-outline btn-sm" onclick="adminLogout()">Logout</button>
+  </div>
+  <div class="admin-layout">
+    <div class="admin-sidebar">
+      <div class="admin-sidebar-title">🛡️ ADMIN PANEL</div>
+      <div class="admin-nav">
+        <div class="admin-nav-item active" onclick="adminTab('overview')">📊 Overview</div>
+        <div class="admin-nav-item" onclick="adminTab('manage-cars')">🚗 Manage Cars</div>
+        <div class="admin-nav-item" onclick="adminTab('add-car')">➕ Add Car</div>
+        <div class="admin-nav-item" onclick="adminTab('all-bookings')">📋 All Bookings</div>
+        <div class="admin-nav-item" onclick="adminTab('users')">👥 Users</div>
+        <div class="admin-nav-item" onclick="adminTab('admins')">🛡️ Admins</div>
+      </div>
+    </div>
+    <div class="admin-content">
+
+      <!-- OVERVIEW -->
+      <div class="admin-sec active" id="admin-sec-overview">
+        <div class="admin-stats-grid">
+          <div class="admin-stat"><div class="admin-stat-val" id="a-s-cars">0</div><div class="admin-stat-label">Total Cars</div></div>
+          <div class="admin-stat"><div class="admin-stat-val" id="a-s-bookings">0</div><div class="admin-stat-label">Total Bookings</div></div>
+          <div class="admin-stat"><div class="admin-stat-val" id="a-s-users">0</div><div class="admin-stat-label">Users</div></div>
+          <div class="admin-stat"><div class="admin-stat-val" id="a-s-revenue">₹0</div><div class="admin-stat-label">Revenue</div></div>
+        </div>
+        <div class="sec-title" style="font-size:18px">Recent Bookings</div>
+        <div class="table-wrap">
+          <table><thead><tr><th>Car</th><th>User</th><th>Dates</th><th>Days</th><th>Total</th><th>License</th></tr></thead>
+          <tbody id="a-recent"></tbody></table>
+        </div>
+      </div>
+
+      <!-- MANAGE CARS -->
+      <div class="admin-sec" id="admin-sec-manage-cars">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+          <div class="sec-title" style="margin:0;font-size:20px">Cars (<span id="a-car-count">0</span>)</div>
+          <button class="btn btn-purple btn-sm" onclick="adminTab('add-car')">+ Add Car</button>
+        </div>
+        <div class="table-wrap">
+          <table><thead><tr><th>Photo</th><th>Name</th><th>Type</th><th>Seats</th><th>Rate/day</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="a-cars-table"></tbody></table>
+        </div>
+      </div>
+
+      <!-- ADD CAR -->
+      <div class="admin-sec" id="admin-sec-add-car">
+        <div class="add-car-box">
+          <h3>➕ Add New Car</h3>
+          <div class="field-row">
+            <div class="field"><label class="lbl">Car Name</label><input type="text" id="ac-name" placeholder="e.g. Hyundai i20"/></div>
+            <div class="field"><label class="lbl">Type</label>
+              <select id="ac-type"><option>Sedan</option><option>SUV</option><option>Hatchback</option><option>MPV</option><option>Luxury</option><option>Mini Bus</option></select>
+            </div>
+          </div>
+          <div class="field-row3">
+            <div class="field"><label class="lbl">Seats</label><input type="number" id="ac-seats" value="5" min="2" max="15"/></div>
+            <div class="field"><label class="lbl">Rate/Day (₹)</label><input type="number" id="ac-rate" placeholder="1500"/></div>
+            <div class="field"><label class="lbl">Fuel Cost/Day (₹)</label><input type="number" id="ac-fuel" placeholder="350"/></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label class="lbl">Color</label><input type="text" id="ac-color" placeholder="Pearl White"/></div>
+            <div class="field"><label class="lbl">Transmission</label><input type="text" id="ac-trans" placeholder="Automatic"/></div>
+          </div>
+          <div class="field"><label class="lbl">Car Image URL</label><input type="url" id="ac-img" placeholder="https://..."/></div>
+          <div id="ac-preview-wrap" style="display:none;margin-top:8px">
+            <img id="ac-img-preview" style="width:100%;height:155px;object-fit:cover;border-radius:8px;border:1px solid var(--border)"/>
+          </div>
+          <div class="field" style="margin-top:12px"><label class="lbl">Tagline</label><input type="text" id="ac-tagline" placeholder="e.g. Sporty city hatchback"/></div>
+          <div style="display:flex;gap:9px;margin-top:6px">
+            <button class="btn btn-purple" style="flex:1;padding:11px;justify-content:center" onclick="addCar()">Add Car</button>
+            <button class="btn btn-outline" onclick="clearAddForm()">Clear</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ALL BOOKINGS -->
+      <div class="admin-sec" id="admin-sec-all-bookings">
+        <div class="sec-title" style="font-size:20px;margin-bottom:14px">All Bookings</div>
+        <div class="table-wrap">
+          <table><thead><tr><th>Car</th><th>User</th><th>From</th><th>To</th><th>Days</th><th>Total</th><th>License</th></tr></thead>
+          <tbody id="a-all-bookings"></tbody></table>
+        </div>
+      </div>
+
+      <!-- USERS -->
+      <div class="admin-sec" id="admin-sec-users">
+        <div class="sec-title" style="font-size:20px;margin-bottom:14px">Registered Users</div>
+        <div class="table-wrap">
+          <table><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Bookings</th><th>Spent</th></tr></thead>
+          <tbody id="a-users-table"></tbody></table>
+        </div>
+      </div>
+
+      <!-- ADMINS -->
+      <div class="admin-sec" id="admin-sec-admins">
+        <div class="sec-title" style="font-size:20px;margin-bottom:14px">Admin Accounts</div>
+        <div class="table-wrap">
+          <table><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Registered</th></tr></thead>
+          <tbody id="a-admins-table"></tbody></table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- =========== CALENDAR MODAL =========== -->
+<div class="cal-overlay" id="cal-overlay">
+  <div class="cal-modal">
+    <button class="modal-close" onclick="closeCal()">✕</button>
+    <div class="cal-car-banner">
+      <img id="cal-car-img" src="" alt="Car"/>
+      <div>
+        <div class="cal-car-name" id="cal-car-name">Car</div>
+        <div class="cal-car-meta" id="cal-car-meta">Type · Seats · Rate</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:5px">Click a start date then an end date</div>
+      </div>
+    </div>
+    <div class="cal-header">
+      <div class="cal-month-label" id="cal-month-label">Month</div>
+      <div class="cal-nav">
+        <button class="cal-nav-btn" onclick="calNav(-1)">‹</button>
+        <button class="cal-nav-btn" onclick="calNav(1)">›</button>
+      </div>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+    <div class="cal-legend">
+      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:rgba(34,197,94,.4);border:1px solid rgba(34,197,94,.5)"></div>Available</div>
+      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:rgba(239,68,68,.4);border:1px solid rgba(239,68,68,.4)"></div>Booked</div>
+      <div class="cal-legend-item"><div class="cal-legend-dot" style="border:1.5px solid var(--accent)"></div>Today</div>
+      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:rgba(244,162,30,.4)"></div>Selected</div>
+    </div>
+    <div class="cal-sel-info" id="cal-sel-info" style="display:none"></div>
+    <div style="display:flex;gap:9px;margin-top:14px">
+      <button class="btn btn-outline btn-sm" onclick="clearCalSel()">Clear</button>
+      <button class="btn btn-primary" id="cal-book-btn" style="flex:1;padding:11px;justify-content:center" onclick="proceedToBook()" disabled>Select dates to book</button>
+    </div>
+  </div>
+</div>
+
+<!-- =========== BOOKING MODAL =========== -->
+<div class="bk-overlay" id="bk-overlay">
+  <div class="bk-modal">
+    <button class="modal-close" onclick="closeBk()">✕</button>
+    <img id="bk-car-img" class="bk-car-img" src="" alt="Car"/>
+    <div class="bk-modal-title" id="bk-car-name">Book Car</div>
+    <div class="field-row">
+      <div class="field"><label class="lbl">From Date</label><input type="date" id="bk-from" onchange="recalc()"/></div>
+      <div class="field"><label class="lbl">To Date</label><input type="date" id="bk-to" onchange="recalc()"/></div>
+    </div>
+    <div class="cost-box">
+      <div class="cost-box-lbl">💰 Cost Breakdown</div>
+      <div class="cost-row"><span>Rate per day</span><span id="cb-rate">₹0</span></div>
+      <div class="cost-row"><span>Number of days</span><span id="cb-days">—</span></div>
+      <div class="cost-row"><span>Rental cost</span><span id="cb-rental">₹0</span></div>
+      <div class="cost-row"><span>Fuel cost (est.)</span><span id="cb-fuel">₹0</span></div>
+      <div class="cost-row"><span>Total</span><span id="cb-total">₹0</span></div>
+    </div>
+    <div class="lic-section">
+      <div class="lic-header-bar">🪪 Driving License</div>
+      <div class="lic-body">
+        <div class="toggle-row">
+          <button class="toggle-btn yes" id="lic-yes-btn" onclick="setLic(true)">✓ I have a license</button>
+          <button class="toggle-btn no" id="lic-no-btn" onclick="setLic(false)">✗ No license</button>
+        </div>
+        <div class="no-lic-warn" id="no-lic-warn">⚠️ <strong>Booking blocked.</strong> A valid driving license is required to rent a vehicle.</div>
+        <div class="lic-fields" id="lic-fields">
+          <div class="lic-field-grid">
+            <div class="field"><label class="lbl">License Number</label><input type="text" id="lic-num" placeholder="TN0120230012345" maxlength="20" oninput="validateLicNum()"/><div id="lic-num-pill"></div></div>
+            <div class="field"><label class="lbl">State Issued</label>
+              <select id="lic-state">
+                <option value="">Select State</option>
+                <option>Tamil Nadu</option><option>Maharashtra</option><option>Karnataka</option>
+                <option>Delhi</option><option>Kerala</option><option>Andhra Pradesh</option>
+                <option>Telangana</option><option>Gujarat</option><option>Rajasthan</option>
+                <option>Uttar Pradesh</option><option>West Bengal</option><option>Punjab</option>
+              </select>
+            </div>
+            <div class="field"><label class="lbl">Issue Date</label><input type="date" id="lic-issue"/></div>
+            <div class="field"><label class="lbl">Expiry Date</label><input type="date" id="lic-expiry" onchange="checkExpiry()"/><div id="expiry-pill"></div></div>
+          </div>
+          <div class="field">
+            <label class="lbl">Upload License Photo</label>
+            <div class="upload-box" onclick="document.getElementById('lic-file').click()">
+              <input type="file" id="lic-file" accept="image/*" onchange="onLicUpload(event)"/>
+              <div style="font-size:26px;margin-bottom:5px">📄</div>
+              <div style="font-weight:600;font-size:13px">Click to upload license photo</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:3px">JPG, PNG supported</div>
+              <img id="lic-preview" class="lic-img-preview" alt="License"/>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-primary" style="width:100%;padding:12px;font-size:14px;justify-content:center" onclick="confirmBooking()">Confirm Booking</button>
+  </div>
+</div>
+
+<script>
+// ============ DEFAULT CARS ============
+const DEFAULT_CARS = [
+  {id:1,name:"Maruti Swift Dzire",type:"Sedan",seats:5,img:"https://imgd.aeplcdn.com/664x374/n/cw/ec/130591/dzire-exterior-right-front-three-quarter-2.jpeg?isig=0&q=80",rate:1200,fuel:300,available:true,tagline:"India's most loved sedan",color:"Pearl White",transmission:"Manual"},
+  {id:2,name:"Mahindra Thar",type:"SUV",seats:4,img:"https://imgd.aeplcdn.com/664x374/n/cw/ec/40087/thar-exterior-right-front-three-quarter-11.jpeg?isig=0&q=80",rate:2500,fuel:550,available:true,tagline:"Born to rule off-road",color:"Rocky Beige",transmission:"Manual 4WD"},
+  {id:3,name:"Honda City",type:"Sedan",seats:5,img:"https://imgd.aeplcdn.com/664x374/n/cw/ec/134287/city-exterior-right-front-three-quarter-3.jpeg?isig=0&q=80",rate:1600,fuel:340,available:true,tagline:"Elegant & refined city cruiser",color:"Platinum White",transmission:"CVT Auto"},
+  {id:4,name:"Toyota Innova Crysta",type:"MPV",seats:7,img:"https://imgd.aeplcdn.com/664x374/n/cw/ec/51435/innova-crysta-exterior-right-front-three-quarter-3.jpeg?isig=0&q=80",rate:2800,fuel:500,available:true,tagline:"Premium family road trip MPV",color:"Silver Metallic",transmission:"Automatic"},
+  {id:5,name:"Tata Nexon",type:"SUV",seats:5,img:"https://imgd.aeplcdn.com/664x374/n/cw/ec/141115/nexon-exterior-right-front-three-quarter-71.jpeg?isig=0&q=80",rate:1800,fuel:380,available:true,tagline:"Safe, powerful & stylish SUV",color:"Flame Red",transmission:"AMT"},
+  {id:6,name:"Maruti Baleno",type:"Hatchback",seats:5,img:"https://imgd.aeplcdn.com/664x374/n/cw/ec/54437/baleno-exterior-right-front-three-quarter-3.jpeg?isig=0&q=80",rate:950,fuel:240,available:true,tagline:"Sporty premium hatchback",color:"Arctic White",transmission:"CVT Auto"},
+  {id:7,name:"BMW 3 Series",type:"Luxury",seats:5,img:"https://imgd.aeplcdn.com/664x374/n/cw/ec/130569/3-series-gran-limousine-exterior-right-front-three-quarter-8.jpeg?isig=0&q=80",rate:6500,fuel:800,available:true,tagline:"Ultimate driving machine",color:"Alpine White",transmission:"8-Speed Auto"},
+  {id:8,name:"Hyundai Creta",type:"SUV",seats:5,img:"https://imgd.aeplcdn.com/664x374/n/cw/ec/106815/creta-exterior-right-front-three-quarter-148.jpeg?isig=0&q=80",rate:1900,fuel:400,available:true,tagline:"India's #1 SUV",color:"Abyss Black",transmission:"IVT Auto"},
+  {id:9,name:"Mercedes C-Class",type:"Luxury",seats:5,img:"https://imgd.aeplcdn.com/664x374/n/cw/ec/130701/c-class-exterior-right-front-three-quarter-3.jpeg?isig=0&q=80",rate:8500,fuel:900,available:true,tagline:"Redefine luxury on every road",color:"Obsidian Black",transmission:"9G-Tronic Auto"},
+  {id:10,name:"Tata Harrier",type:"SUV",seats:5,img:"https://imgd.aeplcdn.com/664x374/n/cw/ec/139155/harrier-exterior-right-front-three-quarter-80.jpeg?isig=0&q=80",rate:2200,fuel:450,available:true,tagline:"Land Rover-derived bold SUV",color:"Orcus White",transmission:"6-Speed Auto"},
+  {id:11,name:"Toyota Fortuner",type:"SUV",seats:7,img:"https://imgd.aeplcdn.com/664x374/n/cw/ec/44709/fortuner-exterior-right-front-three-quarter-9.jpeg?isig=0&q=80",rate:3500,fuel:650,available:true,tagline:"Unstoppable premium SUV",color:"Avant Garde Bronze",transmission:"6-Speed AT"},
+  {id:12,name:"Kia Carens",type:"MPV",seats:7,img:"https://imgd.aeplcdn.com/664x374/n/cw/ec/115025/carens-exterior-right-front-three-quarter-5.jpeg?isig=0&q=80",rate:2000,fuel:420,available:true,tagline:"Smart family crossover MPV",color:"Glacier White Pearl",transmission:"DCT Auto"},
+  {id:13,name:"Volkswagen Virtus",type:"Sedan",seats:5,img:"https://imgd.aeplcdn.com/664x374/n/cw/ec/130217/virtus-exterior-right-front-three-quarter-17.jpeg?isig=0&q=80",rate:1700,fuel:360,available:true,tagline:"European luxury, Indian value",color:"Candy White",transmission:"6-Speed AT"},
+  {id:14,name:"Audi A4",type:"Luxury",seats:5,img:"https://imgd.aeplcdn.com/664x374/n/cw/ec/32597/a4-exterior-right-front-three-quarter-3.jpeg?isig=0&q=80",rate:9000,fuel:1000,available:true,tagline:"Progress through technology",color:"Glacier White",transmission:"S-Tronic DSG"},
+  {id:15,name:"Maruti Ertiga",type:"MPV",seats:7,img:"https://imgd.aeplcdn.com/664x374/n/cw/ec/40087/ertiga-exterior-right-front-three-quarter-5.jpeg?isig=0&q=80",rate:1400,fuel:320,available:true,tagline:"Efficient & spacious family van",color:"Arctic White",transmission:"AT"}
+];
+
+const ADMIN_SECRET = 'DRIVEEASY2025';
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAYS_SHORT = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const TYPES = ['All','Sedan','SUV','MPV','Hatchback','Luxury'];
+
+// ============ STATE ============
+let CARS     = JSON.parse(localStorage.getItem('de5_cars') || JSON.stringify(DEFAULT_CARS));
+let USERS    = JSON.parse(localStorage.getItem('de5_users') || '[]');
+let ADMINS   = JSON.parse(localStorage.getItem('de5_admins') || '[]');
+let BOOKINGS = JSON.parse(localStorage.getItem('de5_bookings') || '[]');
+let currentUser  = JSON.parse(localStorage.getItem('de5_user_session') || 'null');
+let currentAdmin = JSON.parse(localStorage.getItem('de5_admin_session') || 'null');
+
+let bookingCar = null, hasLicense = null, licImgUploaded = false;
+let activeFilter = 'All';
+let calCar = null, calYear = 0, calMonth = 0, calFrom = null, calTo = null;
+
+function saveAll(){
+  localStorage.setItem('de5_cars', JSON.stringify(CARS));
+  localStorage.setItem('de5_users', JSON.stringify(USERS));
+  localStorage.setItem('de5_admins', JSON.stringify(ADMINS));
+  localStorage.setItem('de5_bookings', JSON.stringify(BOOKINGS));
+}
+
+// ============ INIT ============
+window.onload = () => {
+  const today = new Date().toISOString().split('T')[0];
+  const sf = document.getElementById('s-from');
+  const st = document.getElementById('s-to');
+  if(sf) sf.value = today;
+  if(st) st.value = today;
+  document.getElementById('ac-img').addEventListener('input', function(){
+    const v = this.value.trim();
+    const wrap = document.getElementById('ac-preview-wrap');
+    const img  = document.getElementById('ac-img-preview');
+    if(v){ img.src=v; wrap.style.display='block'; }
+    else  { wrap.style.display='none'; }
+  });
+  renderFeaturedCars();
+  if(currentUser)  { goToDashboard(); }
+  else if(currentAdmin) { goToAdmin(); }
+  else { showLanding(); }
+};
+
+function showLanding(){
+  showPage('landing');
+  setNav('public');
+}
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const el = document.getElementById('page-'+id);
+  if(el) el.classList.add('active');
+}
+
+// ============ NAV ============
+function setNav(role){
+  const nb = document.getElementById('nav-btns');
+  if(role==='public'){
+    nb.innerHTML=`<button class="btn btn-outline btn-sm" onclick="showPage('user-login')">User Login</button>
+    <button class="btn btn-primary btn-sm" onclick="showPage('user-register')">User Register</button>
+    <button class="btn btn-purple btn-sm" onclick="showPage('admin-login')">Admin</button>`;
+  } else if(role==='user'){
+    nb.innerHTML=`<button class="btn btn-outline btn-sm" onclick="showPage('my-bookings');renderMyBookings()">My Bookings</button>
+    <button class="btn btn-primary btn-sm" onclick="showPage('dashboard')">Dashboard</button>`;
+  } else if(role==='admin'){
+    nb.innerHTML=`<span class="sbadge sbadge-purple" style="padding:6px 12px">🛡️ Admin</span>
+    <button class="btn btn-outline btn-sm" onclick="adminLogout()">Logout</button>`;
+  }
+}
+
+// ============ USER AUTH ============
+function userRegister(){
+  const fn=g('ur-fname'),ln=g('ur-lname'),em=g('ur-email'),ph=g('ur-phone'),pw=g('ur-pass'),pw2=g('ur-pass2');
+  if(!fn||!ln||!em||!pw) return showErr('ur-err','Please fill all fields.');
+  if(pw!==pw2) return showErr('ur-err','Passwords do not match.');
+  if(pw.length<6) return showErr('ur-err','Password must be at least 6 characters.');
+  if(USERS.find(u=>u.email===em)||ADMINS.find(a=>a.email===em)) return showErr('ur-err','Email already registered.');
+  USERS.push({id:Date.now(),firstName:fn,lastName:ln,email:em,phone:ph,password:pw,createdAt:new Date().toLocaleDateString()});
+  saveAll(); toast('Account created! Please login.','success'); showPage('user-login');
+}
+function userLogin(){
+  const em=g('ul-email'),pw=g('ul-pass');
+  const user = USERS.find(u=>u.email===em&&u.password===pw);
+  if(!user) return showErr('ul-err','Invalid email or password.');
+  currentUser = user;
+  localStorage.setItem('de5_user_session', JSON.stringify(user));
+  goToDashboard();
+}
+function userLogout(){
+  currentUser=null; localStorage.removeItem('de5_user_session');
+  showLanding(); toast('Logged out.','info');
+}
+function goToDashboard(){
+  setNav('user');
+  document.getElementById('u-name').textContent = currentUser.firstName+' '+currentUser.lastName;
+  document.getElementById('u-avatar').textContent = currentUser.firstName[0].toUpperCase();
+  updateUserStats();
+  buildFilterChips();
+  renderCars(CARS);
+  showPage('dashboard');
+}
+function updateUserStats(){
+  const my = BOOKINGS.filter(b=>b.userId===currentUser?.id);
+  document.getElementById('u-s-total').textContent = my.length;
+  document.getElementById('u-s-spent').textContent = '₹'+my.reduce((s,b)=>s+b.total,0).toLocaleString();
+  document.getElementById('u-s-cars').textContent = CARS.filter(c=>c.available).length;
+}
+
+// ============ ADMIN AUTH ============
+function adminRegister(){
+  const fn=g('ar-fname'),ln=g('ar-lname'),em=g('ar-email'),ph=g('ar-phone'),pw=g('ar-pass'),pw2=g('ar-pass2'),secret=g('ar-secret');
+  if(!fn||!ln||!em||!pw) return showErr('ar-err','Please fill all fields.');
+  if(pw!==pw2) return showErr('ar-err','Passwords do not match.');
+  if(pw.length<6) return showErr('ar-err','Password must be at least 6 characters.');
+  if(secret!==ADMIN_SECRET) return showErr('ar-err','Invalid admin secret key.');
+  if(ADMINS.find(a=>a.email===em)||USERS.find(u=>u.email===em)) return showErr('ar-err','Email already registered.');
+  ADMINS.push({id:Date.now(),firstName:fn,lastName:ln,email:em,phone:ph,password:pw,createdAt:new Date().toLocaleDateString()});
+  saveAll(); toast('Admin account created! Please login.','success'); showPage('admin-login');
+}
+function adminLogin(){
+  const em=g('al-email'),pw=g('al-pass');
+  const admin = ADMINS.find(a=>a.email===em&&a.password===pw);
+  if(!admin) return showErr('al-err','Invalid admin email or password.');
+  currentAdmin = admin;
+  localStorage.setItem('de5_admin_session', JSON.stringify(admin));
+  goToAdmin();
+}
+function adminLogout(){
+  currentAdmin=null; localStorage.removeItem('de5_admin_session');
+  showLanding(); toast('Admin logged out.','info');
+}
+function goToAdmin(){
+  setNav('admin');
+  document.getElementById('admin-name-display').textContent = 'Welcome, '+currentAdmin.firstName+' '+currentAdmin.lastName;
+  refreshAdmin();
+  showPage('admin');
+  adminTab('overview');
+}
+
+// ============ ADMIN TABS ============
+function adminTab(tab){
+  document.querySelectorAll('.admin-sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.admin-nav-item').forEach(n=>n.classList.remove('active'));
+  const sec = document.getElementById('admin-sec-'+tab);
+  if(sec) sec.classList.add('active');
+  document.querySelectorAll('.admin-nav-item').forEach(n=>{
+    if(n.getAttribute('onclick')===`adminTab('${tab}')`) n.classList.add('active');
+  });
+  refreshAdmin();
+}
+
+function refreshAdmin(){
+  const rev = BOOKINGS.reduce((s,b)=>s+b.total,0);
+  document.getElementById('a-s-cars').textContent = CARS.length;
+  document.getElementById('a-s-bookings').textContent = BOOKINGS.length;
+  document.getElementById('a-s-users').textContent = USERS.length;
+  document.getElementById('a-s-revenue').textContent = '₹'+rev.toLocaleString();
+  document.getElementById('a-car-count').textContent = CARS.length;
+
+  // Recent bookings
+  const rb = [...BOOKINGS].reverse().slice(0,8);
+  document.getElementById('a-recent').innerHTML = rb.length ? rb.map(b=>{
+    const u = USERS.find(u=>u.id===b.userId)||{firstName:'Unknown',lastName:''};
+    return `<tr><td style="display:flex;align-items:center;gap:8px"><img src="${b.carImg||''}" style="width:44px;height:29px;object-fit:cover;border-radius:4px" onerror="this.style.display='none'"/>${b.car}</td>
+    <td>${u.firstName} ${u.lastName}</td><td>${b.from} → ${b.to}</td><td>${b.days}d</td>
+    <td style="color:var(--accent);font-weight:700">₹${b.total.toLocaleString()}</td>
+    <td><span class="sbadge ${b.licVerified?'sbadge-ok':'sbadge-warn'}">${b.licVerified?'✓ Uploaded':'Uploaded'}</span></td></tr>`;
+  }).join('') : '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:18px">No bookings yet</td></tr>';
+
+  // Cars table
+  document.getElementById('a-cars-table').innerHTML = CARS.map(c=>`<tr>
+    <td><img src="${c.img}" style="width:52px;height:34px;object-fit:cover;border-radius:5px;border:1px solid var(--border)" onerror="this.style.display='none'"/></td>
+    <td style="font-weight:600">${c.name}</td>
+    <td><span class="sbadge sbadge-blue">${c.type}</span></td>
+    <td>${c.seats}</td>
+    <td>₹${c.rate.toLocaleString()}</td>
+    <td><span class="sbadge ${c.available?'sbadge-ok':'sbadge-fail'}">${c.available?'Available':'Unavailable'}</span></td>
+    <td style="display:flex;gap:5px;flex-wrap:wrap">
+      <button class="btn btn-xs ${c.available?'btn-outline':'btn-primary'}" onclick="toggleCarAvail(${c.id})">${c.available?'Disable':'Enable'}</button>
+      <button class="btn btn-xs btn-danger" onclick="removeCar(${c.id})">Remove</button>
+    </td></tr>`).join('') || '<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:18px">No cars</td></tr>';
+
+  // All bookings
+  document.getElementById('a-all-bookings').innerHTML = [...BOOKINGS].reverse().map(b=>{
+    const u = USERS.find(u=>u.id===b.userId)||{firstName:'Unknown',lastName:''};
+    return `<tr><td>${b.car}</td><td>${u.firstName} ${u.lastName}</td><td>${b.from}</td><td>${b.to}</td>
+    <td>${b.days}d</td><td style="color:var(--accent);font-weight:700">₹${b.total.toLocaleString()}</td>
+    <td><span class="sbadge sbadge-ok">✓ Uploaded</span></td></tr>`;
+  }).join('') || '<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:18px">No bookings</td></tr>';
+
+  // Users
+  document.getElementById('a-users-table').innerHTML = USERS.map(u=>{
+    const ub = BOOKINGS.filter(b=>b.userId===u.id);
+    return `<tr><td style="font-weight:600">${u.firstName} ${u.lastName}</td><td>${u.email}</td>
+    <td>${u.phone||'—'}</td><td>${ub.length}</td>
+    <td style="color:var(--accent)">₹${ub.reduce((s,b)=>s+b.total,0).toLocaleString()}</td></tr>`;
+  }).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:18px">No users yet</td></tr>';
+
+  // Admins
+  document.getElementById('a-admins-table').innerHTML = ADMINS.map(a=>`<tr>
+    <td style="font-weight:600">${a.firstName} ${a.lastName} ${a.id===currentAdmin?.id?'<span class="sbadge sbadge-purple">You</span>':''}</td>
+    <td>${a.email}</td><td>${a.phone||'—'}</td><td>${a.createdAt||'—'}</td></tr>`
+  ).join('') || '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:18px">No admins registered</td></tr>';
+}
+
+// ============ CAR MANAGEMENT ============
+function addCar(){
+  const name=g('ac-name'),type=g('ac-type'),img=g('ac-img'),tagline=g('ac-tagline');
+  const seats=parseInt(document.getElementById('ac-seats').value)||5;
+  const rate=parseInt(document.getElementById('ac-rate').value)||0;
+  const fuel=parseInt(document.getElementById('ac-fuel').value)||0;
+  const color=g('ac-color')||'White', trans=g('ac-trans')||'Manual';
+  if(!name||!rate||!fuel){toast('Fill car name, rate and fuel cost.','error');return;}
+  CARS.push({id:Date.now(),name,type,seats,img:img||`https://via.placeholder.com/400x200/151e30/6b7491?text=${encodeURIComponent(name)}`,
+    rate,fuel,available:true,tagline:tagline||name,color,transmission:trans});
+  saveAll(); clearAddForm(); refreshAdmin();
+  toast('Car "'+name+'" added!','success'); adminTab('manage-cars');
+}
+function clearAddForm(){
+  ['ac-name','ac-img','ac-tagline','ac-color','ac-trans'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+  ['ac-seats','ac-rate','ac-fuel'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+  document.getElementById('ac-preview-wrap').style.display='none';
+}
+function toggleCarAvail(id){
+  const c = CARS.find(c=>c.id===id); if(!c) return;
+  c.available=!c.available; saveAll(); refreshAdmin();
+  toast(c.name+' is now '+(c.available?'available':'disabled')+'.','info');
+}
+function removeCar(id){
+  if(!confirm('Remove this car?')) return;
+  CARS = CARS.filter(c=>c.id!==id); saveAll(); refreshAdmin(); toast('Car removed.','info');
+}
+
+// ============ CARS UI ============
+function renderFeaturedCars(){
+  const el = document.getElementById('featured-cars');
+  if(el) el.innerHTML = CARS.slice(0,4).map(c=>carHTML(c,false)).join('');
+}
+function renderCars(list){
+  const el = document.getElementById('cars-list');
+  if(!el) return;
+  el.innerHTML = list.length ? list.map(c=>carHTML(c,true)).join('') : '<div style="color:var(--muted);padding:20px">No cars match your search.</div>';
+}
+function carHTML(c, bookable){
+  return `<div class="car-card">
+    <div class="car-img-wrap">
+      <img src="${c.img}" alt="${c.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x180/151e30/6b7491?text=${encodeURIComponent(c.name)}'"/>
+      <div class="car-img-overlay"></div>
+      <span class="badge-type">${c.type}</span>
+      <span class="badge-avail ${c.available?'badge-ok':'badge-no'}">${c.available?'✓ Available':'Unavailable'}</span>
+    </div>
+    <div class="car-body">
+      <div class="car-name">${c.name}</div>
+      <div class="car-tagline">${c.tagline}</div>
+      <div class="specs">
+        <span class="spec">💺 ${c.seats} Seats</span>
+        <span class="spec">⚙️ ${c.transmission}</span>
+        <span class="spec">⛽ ₹${c.fuel}/day</span>
+        <span class="spec">🎨 ${c.color}</span>
+      </div>
+      <div class="car-footer">
+        <div><div class="car-price">₹${c.rate.toLocaleString()}</div><div class="car-price-sub">per day + fuel</div></div>
+        ${bookable?`<div style="display:flex;gap:5px">
+          <button class="btn btn-outline btn-sm" onclick="openCalendar(${c.id})">📅</button>
+          <button class="btn btn-primary btn-sm" onclick="openBooking(${c.id})" ${!c.available?'disabled':''}>Book</button>
+        </div>`:''}
+      </div>
+    </div>
+  </div>`;
+}
+function buildFilterChips(){
+  const el = document.getElementById('filter-chips');
+  if(el) el.innerHTML = TYPES.map(t=>`<button class="chip ${t===activeFilter?'active':''}" onclick="filterBy('${t}')">${t}</button>`).join('');
+}
+function filterBy(type){
+  activeFilter=type; buildFilterChips();
+  const seats = document.getElementById('s-seats')?.value;
+  let list = type==='All' ? CARS : CARS.filter(c=>c.type===type);
+  if(seats) list = list.filter(c=>c.seats==seats);
+  renderCars(list);
+}
+function searchCars(){
+  const seats=document.getElementById('s-seats')?.value;
+  const from=document.getElementById('s-from')?.value;
+  const to=document.getElementById('s-to')?.value;
+  if(!from||!to){toast('Please select dates.','error');return;}
+  if(new Date(to)<new Date(from)){toast('End date must be after start date.','error');return;}
+  activeFilter='All'; buildFilterChips();
+  let list = seats ? CARS.filter(c=>c.seats==seats) : CARS;
+  renderCars(list);
+  const bf=document.getElementById('bk-from'); const bt=document.getElementById('bk-to');
+  if(bf) bf.value=from; if(bt) bt.value=to;
+}
+
+// ============ CALENDAR ============
+function openCalendar(carId){
+  if(!currentUser){showPage('user-login');return;}
+  calCar=CARS.find(c=>c.id===carId); if(!calCar) return;
+  calFrom=null; calTo=null;
+  const now=new Date(); calYear=now.getFullYear(); calMonth=now.getMonth();
+  document.getElementById('cal-car-img').src=calCar.img;
+  document.getElementById('cal-car-name').textContent=calCar.name;
+  document.getElementById('cal-car-meta').textContent=`${calCar.type} · ${calCar.seats} Seats · ₹${calCar.rate.toLocaleString()}/day`;
+  document.getElementById('cal-sel-info').style.display='none';
+  document.getElementById('cal-book-btn').disabled=true;
+  document.getElementById('cal-book-btn').textContent='Select dates to book';
+  renderCalendar();
+  document.getElementById('cal-overlay').classList.add('active');
+}
+function closeCal(){document.getElementById('cal-overlay').classList.remove('active');}
+function calNav(dir){
+  calMonth+=dir;
+  if(calMonth<0){calMonth=11;calYear--;} if(calMonth>11){calMonth=0;calYear++;}
+  renderCalendar();
+}
+function getBookedDates(carId){
+  const booked=new Set();
+  const carName=CARS.find(c=>c.id===carId)?.name;
+  BOOKINGS.filter(b=>b.car===carName).forEach(b=>{
+    let d=new Date(b.from); const end=new Date(b.to);
+    while(d<=end){ booked.add(d.toISOString().split('T')[0]); d.setDate(d.getDate()+1); }
+  });
+  return booked;
+}
+function renderCalendar(){
+  document.getElementById('cal-month-label').textContent=MONTHS[calMonth]+' '+calYear;
+  const grid=document.getElementById('cal-grid');
+  const today=new Date(); today.setHours(0,0,0,0);
+  const booked=getBookedDates(calCar.id);
+  let html=DAYS_SHORT.map(d=>`<div class="cal-day-hdr">${d}</div>`).join('');
+  const firstDay=new Date(calYear,calMonth,1).getDay();
+  const daysInMonth=new Date(calYear,calMonth+1,0).getDate();
+  for(let i=0;i<firstDay;i++) html+=`<div class="cal-day empty"></div>`;
+  for(let day=1;day<=daysInMonth;day++){
+    const date=new Date(calYear,calMonth,day); date.setHours(0,0,0,0);
+    const ds=date.toISOString().split('T')[0];
+    const isPast=date<today, isToday=date.getTime()===today.getTime();
+    const isBooked=booked.has(ds);
+    const isFrom=calFrom===ds, isTo=calTo===ds;
+    const inRange=calFrom&&calTo&&ds>calFrom&&ds<calTo;
+    let cls='cal-day';
+    if(isPast) cls+=' past';
+    else if(isBooked) cls+=' booked';
+    else cls+=' avail';
+    if(isToday) cls+=' today';
+    if(isFrom||isTo) cls+=' sel-from';
+    if(inRange) cls+=' in-range';
+    const dot=isBooked?'<div class="dot dot-booked"></div>':(!isPast?'<div class="dot dot-avail"></div>':'');
+    const click=(!isPast&&!isBooked)?`onclick="calClick('${ds}')"` : '';
+    html+=`<div class="${cls}" ${click} title="${isBooked?'Booked on '+ds:'Available — '+ds}">${day}${dot}</div>`;
+  }
+  grid.innerHTML=html;
+}
+function calClick(ds){
+  if(!calFrom){ calFrom=ds; calTo=null; }
+  else if(!calTo&&ds>calFrom){
+    const booked=getBookedDates(calCar.id);
+    let d=new Date(calFrom); d.setDate(d.getDate()+1);
+    const end=new Date(ds); let conflict=false;
+    while(d<end){ if(booked.has(d.toISOString().split('T')[0])){conflict=true;break;} d.setDate(d.getDate()+1); }
+    if(conflict){toast('Range includes booked dates. Choose another range.','error');calFrom=ds;calTo=null;}
+    else calTo=ds;
+  } else { calFrom=ds; calTo=null; }
+  updateCalInfo(); renderCalendar();
+}
+function updateCalInfo(){
+  const info=document.getElementById('cal-sel-info');
+  const btn=document.getElementById('cal-book-btn');
+  if(calFrom&&calTo){
+    const days=Math.max(1,Math.ceil((new Date(calTo)-new Date(calFrom))/(86400000)));
+    const total=(calCar.rate+calCar.fuel)*days;
+    info.innerHTML=`📅 <strong>${calFrom}</strong> → <strong>${calTo}</strong> &nbsp;|&nbsp; ${days} day(s) &nbsp;|&nbsp; Est: <strong style="color:var(--accent)">₹${total.toLocaleString()}</strong>`;
+    info.style.display='block'; btn.disabled=false; btn.textContent='Book '+calCar.name+' →';
+  } else if(calFrom){
+    info.innerHTML=`📅 From: <strong>${calFrom}</strong> — Now select end date`;
+    info.style.display='block'; btn.disabled=true; btn.textContent='Select end date';
+  } else { info.style.display='none'; btn.disabled=true; btn.textContent='Select dates to book'; }
+}
+function clearCalSel(){calFrom=null;calTo=null;updateCalInfo();renderCalendar();}
+function proceedToBook(){
+  if(!calFrom||!calTo) return;
+  closeCal();
+  openBooking(calCar.id, calFrom, calTo);
+}
+
+// ============ BOOKING MODAL ============
+function openBooking(id, fromDate=null, toDate=null){
+  if(!currentUser){showPage('user-login');return;}
+  bookingCar=CARS.find(c=>c.id===id); if(!bookingCar) return;
+  hasLicense=null; licImgUploaded=false;
+  document.getElementById('bk-car-name').textContent='Book '+bookingCar.name;
+  document.getElementById('bk-car-img').src=bookingCar.img;
+  const sf=document.getElementById('s-from'), st=document.getElementById('s-to');
+  document.getElementById('bk-from').value=fromDate||(sf?.value||'');
+  document.getElementById('bk-to').value=toDate||(st?.value||'');
+  ['lic-yes-btn','lic-no-btn'].forEach(id=>document.getElementById(id).classList.remove('active'));
+  document.getElementById('lic-fields').classList.remove('show');
+  document.getElementById('no-lic-warn').classList.remove('show');
+  document.getElementById('lic-preview').style.display='none';
+  document.getElementById('lic-num').value='';
+  document.getElementById('lic-num-pill').innerHTML='';
+  document.getElementById('expiry-pill').innerHTML='';
+  document.getElementById('lic-file').value='';
+  recalc();
+  document.getElementById('bk-overlay').classList.add('active');
+}
+function closeBk(){document.getElementById('bk-overlay').classList.remove('active');}
+function recalc(){
+  if(!bookingCar) return;
+  const f=document.getElementById('bk-from').value, t=document.getElementById('bk-to').value;
+  if(!f||!t) return;
+  const days=Math.max(1,Math.ceil((new Date(t)-new Date(f))/(86400000)));
+  const rental=bookingCar.rate*days, fuel=bookingCar.fuel*days;
+  document.getElementById('cb-rate').textContent='₹'+bookingCar.rate.toLocaleString();
+  document.getElementById('cb-days').textContent=days+' day(s)';
+  document.getElementById('cb-rental').textContent='₹'+rental.toLocaleString();
+  document.getElementById('cb-fuel').textContent='₹'+fuel.toLocaleString();
+  document.getElementById('cb-total').textContent='₹'+(rental+fuel).toLocaleString();
+}
+
+// ============ LICENSE ============
+function setLic(yn){
+  hasLicense=yn;
+  document.getElementById('lic-yes-btn').classList.toggle('active',yn);
+  document.getElementById('lic-no-btn').classList.toggle('active',!yn);
+  document.getElementById('lic-fields').classList.toggle('show',yn);
+  document.getElementById('no-lic-warn').classList.toggle('show',!yn);
+}
+function validateLicNum(){
+  const val=document.getElementById('lic-num').value.toUpperCase().replace(/\s/g,'');
+  document.getElementById('lic-num').value=val;
+  const pill=document.getElementById('lic-num-pill');
+  if(!val){pill.innerHTML='';return false;}
+  const valid=/^[A-Z]{2}[0-9]{13}$/.test(val)||/^[A-Z]{2}[0-9]{2}[0-9]{4}[0-9]{7}$/.test(val);
+  pill.innerHTML=`<span class="vpill ${valid?'ok':'fail'}">${valid?'✓ Valid format':'✗ Invalid — e.g. TN0120230012345'}</span>`;
+  return valid;
+}
+function checkExpiry(){
+  const exp=document.getElementById('lic-expiry').value;
+  if(!exp) return false;
+  const expired=new Date(exp)<new Date();
+  document.getElementById('expiry-pill').innerHTML=`<span class="vpill ${expired?'fail':'ok'}">${expired?'✗ License expired':'✓ Valid until '+exp}</span>`;
+  return !expired;
+}
+function onLicUpload(e){
+  const file=e.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    const prev=document.getElementById('lic-preview');
+    prev.src=ev.target.result; prev.style.display='block';
+    licImgUploaded=true;
+    toast('License photo uploaded.','success');
+  };
+  reader.readAsDataURL(file);
+}
+
+function confirmBooking(){
+  if(!bookingCar) return;
+  const from=document.getElementById('bk-from').value, to=document.getElementById('bk-to').value;
+  if(!from||!to){toast('Please select dates.','error');return;}
+  if(new Date(to)<new Date(from)){toast('End date must be after start date.','error');return;}
+  if(hasLicense===null){toast('Please confirm your license status.','error');return;}
+  if(!hasLicense){toast('A driving license is required to rent.','error');return;}
+  const licNum=document.getElementById('lic-num').value;
+  const licExpiry=document.getElementById('lic-expiry').value;
+  if(!licNum){toast('Please enter your license number.','error');return;}
+  if(!validateLicNum()){toast('Invalid license number format.','error');return;}
+  if(!licExpiry){toast('Please enter license expiry date.','error');return;}
+  if(!checkExpiry()){toast('Your license has expired.','error');return;}
+  if(!licImgUploaded){toast('Please upload a photo of your license.','error');return;}
+  const days=Math.max(1,Math.ceil((new Date(to)-new Date(from))/(86400000)));
+  const total=bookingCar.rate*days+bookingCar.fuel*days;
+  BOOKINGS.push({
+    id:Date.now(), userId:currentUser.id, car:bookingCar.name, carImg:bookingCar.img,
+    from, to, days, rental:bookingCar.rate*days, fuel:bookingCar.fuel*days, total,
+    licNum, licState:document.getElementById('lic-state').value,
+    licExpiry, licVerified:true, date:new Date().toLocaleDateString()
+  });
+  saveAll(); closeBk(); updateUserStats();
+  toast('🎉 Booking confirmed! Total: ₹'+total.toLocaleString(),'success');
+}
+
+// ============ MY BOOKINGS ============
+function renderMyBookings(){
+  const my=BOOKINGS.filter(b=>b.userId===currentUser?.id);
+  const tb=document.getElementById('my-bookings-body');
+  if(!tb) return;
+  if(!my.length){tb.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:22px">No bookings yet.</td></tr>';return;}
+  tb.innerHTML=my.map(b=>`<tr>
+    <td style="display:flex;align-items:center;gap:8px">
+      <img src="${b.carImg||''}" style="width:44px;height:29px;object-fit:cover;border-radius:4px;border:1px solid var(--border)" onerror="this.style.display='none'"/>
+      ${b.car}
+    </td>
+    <td>${b.from}</td><td>${b.to}</td><td>${b.days}d</td>
+    <td>₹${b.fuel.toLocaleString()}</td>
+    <td style="color:var(--accent);font-weight:700">₹${b.total.toLocaleString()}</td>
+    <td><span class="sbadge sbadge-ok">✓ Uploaded</span></td></tr>`).join('');
+}
+
+// ============ UTILS ============
+function g(id){ return (document.getElementById(id)||{}).value?.trim()||''; }
+function showErr(id,msg){ const el=document.getElementById(id); if(!el) return; el.textContent=msg; el.style.display='block'; setTimeout(()=>el.style.display='none',4000); }
+function toast(msg,type='success'){ const t=document.getElementById('toast'); t.textContent=msg; t.className='toast '+type; t.style.display='block'; setTimeout(()=>t.style.display='none',3500); }
+
+document.getElementById('bk-overlay').addEventListener('click',function(e){if(e.target===this)closeBk();});
+document.getElementById('cal-overlay').addEventListener('click',function(e){if(e.target===this)closeCal();});
+document.getElementById('bk-from').addEventListener('change',recalc);
+document.getElementById('bk-to').addEventListener('change',recalc);
+</script>
+</body>
+</html>
